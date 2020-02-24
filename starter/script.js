@@ -173,6 +173,9 @@
 // getWeather(44418);
 // getWeather(2487956);
 
+/////////////////////////////////////////////////////////
+// Lecture: Making AJAX calls with fetch and async/await
+
 async function getWeatherAW(woeid) {
     try {
         const result = await fetch(`https://www.metaweather.com/api/location/${woeid}/`);
@@ -192,6 +195,3 @@ getWeatherAW(44418).then(data => {
     console.log(dataLondon);
 });
 getWeatherAW(2487956);
-
-/////////////////////////////////////////////////////////
-// Lecture: Making AJAX calls with fetch and async/await
