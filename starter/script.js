@@ -54,6 +54,61 @@
     // Determines what happens after the event has happened
     // Implements the concept of a future value that we're expecting
 
+// const getIDs = new Promise((resolve, reject) => {
+//     setTimeout(()=>{
+//         resolve([523, 883, 432, 974]); // setTimeout will always work, so you don't need the reject callback. Once the setTimeout completes, the promise is fulfilled with the resolve function
+//     }, 1500);
+// });
+
+// const getRecipe = recID => {
+//     return new Promise((resolve, reject) => {
+//         setTimeout((ID) => {
+//             const recipe = {
+//                 title: 'Fresh tomato pasta',
+//                 publisher: 'Jonas'
+//             };
+//             resolve(`${ID}: ${recipe.title}`);
+//         }, 1500, recID);
+//     });
+// };
+
+// const getRelated = publisher => {
+//     return new Promise((resolve, reject) => {
+//         setTimeout((pub) => {
+//             const recipe = {
+//                 title: 'Italian pizza',
+//                 publisher: 'Jonas'
+//             };
+//             resolve(`${pub}: ${recipe.title}`);
+//         }, 1500, publisher);
+//     });
+// };
+
+// // Consuming promises
+// getIDs
+// .then(IDs => { // the callback is the result of the fulfilled promise
+//     console.log(IDs);
+//     return getRecipe(IDs[2]);
+// })
+// .then(recipe => {
+//     console.log(recipe);
+//     return getRelated('Jonas')
+// })
+// .then(recipe => {
+//     console.log(recipe);
+// })
+// .catch(error => { // this handles the async if it fails
+//     console.log(error);
+// });
+
+
+
+ ////////////////////////////////////////
+// Lecture: From Promises to Async/Await
+
+// Easier way to consume promises (produce promises the same way)
+
+
 const getIDs = new Promise((resolve, reject) => {
     setTimeout(()=>{
         resolve([523, 883, 432, 974]); // setTimeout will always work, so you don't need the reject callback. Once the setTimeout completes, the promise is fulfilled with the resolve function
@@ -84,20 +139,16 @@ const getRelated = publisher => {
     });
 };
 
-// Consuming promises
-getIDs
-.then(IDs => { // the callback is the result of the fulfilled promise
+async function getRecipesAW() { // runs in the background and returns a promise
+    const IDs = await getIDs; // await causes the code to stop and wait for the promise in getIDs to be resolved. Once it's resolved, the value of the resolved function is stored in the variable IDs. Also remember that you need more code to handle an error.
     console.log(IDs);
-    return getRecipe(IDs[2]);
-})
-.then(recipe => {
+    const recipe = await getRecipe(IDs[2]);
     console.log(recipe);
-    return getRelated('Jonas')
-})
-.then(recipe => {
-    console.log(recipe);
-})
-.catch(error => { // this handles the async if it fails
-    console.log(error);
-});
+    const related = await getRelated('Jonas');
+    console.log(related);
 
+    return recipe;
+};
+getRecipesAW().then(result => {
+    console.log(`${result} is the best ever.`)
+}); // you have to consume the async function with then() and pass in a callback function where the callback is what is returned, in this case "recipe";
