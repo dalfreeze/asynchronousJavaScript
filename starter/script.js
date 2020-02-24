@@ -12,8 +12,7 @@
 
 // first();
 
-
- /////////////////////////////////////////////////
+/////////////////////////////////////////////////
 // Lecture: Asynchronous Javascript with Callbacks
 
 // Callback hell
@@ -43,16 +42,13 @@
 // getRecipe();
 // Callback hell is remedied by ES6 promises
 
-
-
-
- //////////////////////////////////////////
+//////////////////////////////////////////
 // Lecture: From Callback Hell to Promises
 
 // Promise:
-    // Object that keeps track of whether or a certain asynchronous event has happened already
-    // Determines what happens after the event has happened
-    // Implements the concept of a future value that we're expecting
+// Object that keeps track of whether or a certain asynchronous event has happened already
+// Determines what happens after the event has happened
+// Implements the concept of a future value that we're expecting
 
 // const getIDs = new Promise((resolve, reject) => {
 //     setTimeout(()=>{
@@ -101,13 +97,10 @@
 //     console.log(error);
 // });
 
-
-
- ////////////////////////////////////////
+////////////////////////////////////////
 // Lecture: From Promises to Async/Await
 
 // Easier way to consume promises (produce promises the same way)
-
 
 // const getIDs = new Promise((resolve, reject) => {
 //     setTimeout(()=>{
@@ -153,30 +146,52 @@
 //     console.log(`${result} is the best ever.`)
 // }); // you have to consume the async function with then() and pass in a callback function where the callback is what is returned, in this case "recipe";
 
-
- /////////////////////////
+/////////////////////////
 // Lecture: AJAX and APIs
 
 // AJAX: Asynchronous Javascript and XML
 // API: Application Programming Interface
 
-function getWeather(woeid) {
-    const cors = 'https://cors-anywhere.herokuapp.com/';
+// function getWeather(woeid) {
+//     const cors = 'https://cors-anywhere.herokuapp.com/';
 
-    fetch(`${cors}https://www.metaweather.com/api/location/${woeid}/`) // returns a promise
-    .then(res => {
-        console.log(res); // res is stored in the body and needs to be converted from JSON to JS
-        return res.json(); // converts the result of the fetch promise body into a JS object
-    })
-    .then(data => { // consuming the promise that is returned from the above then
-        // console.log(data);
-        const today = data.consolidated_weather[0];
-        console.log(`Temperatures in ${data.title} stay between ${today.min_temp} and ${today.max_temp}.`)
-    })
-    .catch(error => {
+//     fetch(`${cors}https://www.metaweather.com/api/location/${woeid}/`) // returns a promise
+//     .then(res => {
+//         // console.log(res); // res is stored in the body and needs to be converted from JSON to JS
+//         return res.json(); // converts the result of the fetch promise body into a JS object
+//     })
+//     .then(data => { // consuming the promise that is returned from the above then
+//         // console.log(data);
+//         const today = data.consolidated_weather[0];
+//         console.log(`Temperatures in ${data.title} stay between ${today.min_temp} and ${today.max_temp}.`)
+//     })
+//     .catch(error => {
+//         // console.log(error);
+//     });
+// };
+
+// getWeather(44418);
+// getWeather(2487956);
+
+async function getWeatherAW(woeid) {
+    try {
+        const result = await fetch(`https://www.metaweather.com/api/location/${woeid}/`);
+        const data = await result.json();
+        const tomorrow = data.consolidated_weather[1];
+        console.log(`Temperatures in ${data.title} stay between ${tomorrow.min_temp} and ${tomorrow.max_temp}.`);
+        return data; // returns the result of the promise of getWeatherAW
+    } catch(error) {
         console.log(error);
-    });
-};
+    }
+}
 
-getWeather(44418);
-getWeather(2487956);
+let dataLondon;
+
+getWeatherAW(44418).then(data => {
+    dataLondon = data;
+    console.log(dataLondon);
+});
+getWeatherAW(2487956);
+
+/////////////////////////////////////////////////////////
+// Lecture: Making AJAX calls with fetch and async/await
