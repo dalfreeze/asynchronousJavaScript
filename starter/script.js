@@ -109,46 +109,74 @@
 // Easier way to consume promises (produce promises the same way)
 
 
-const getIDs = new Promise((resolve, reject) => {
-    setTimeout(()=>{
-        resolve([523, 883, 432, 974]); // setTimeout will always work, so you don't need the reject callback. Once the setTimeout completes, the promise is fulfilled with the resolve function
-    }, 1500);
-});
+// const getIDs = new Promise((resolve, reject) => {
+//     setTimeout(()=>{
+//         resolve([523, 883, 432, 974]); // setTimeout will always work, so you don't need the reject callback. Once the setTimeout completes, the promise is fulfilled with the resolve function
+//     }, 1500);
+// });
 
-const getRecipe = recID => {
-    return new Promise((resolve, reject) => {
-        setTimeout((ID) => {
-            const recipe = {
-                title: 'Fresh tomato pasta',
-                publisher: 'Jonas'
-            };
-            resolve(`${ID}: ${recipe.title}`);
-        }, 1500, recID);
+// const getRecipe = recID => {
+//     return new Promise((resolve, reject) => {
+//         setTimeout((ID) => {
+//             const recipe = {
+//                 title: 'Fresh tomato pasta',
+//                 publisher: 'Jonas'
+//             };
+//             resolve(`${ID}: ${recipe.title}`);
+//         }, 1500, recID);
+//     });
+// };
+
+// const getRelated = publisher => {
+//     return new Promise((resolve, reject) => {
+//         setTimeout((pub) => {
+//             const recipe = {
+//                 title: 'Italian pizza',
+//                 publisher: 'Jonas'
+//             };
+//             resolve(`${pub}: ${recipe.title}`);
+//         }, 1500, publisher);
+//     });
+// };
+
+// async function getRecipesAW() { // runs in the background and returns a promise
+//     const IDs = await getIDs; // await causes the code to stop and wait for the promise in getIDs to be resolved. Once it's resolved, the value of the resolved function is stored in the variable IDs. Also remember that you need more code to handle an error.
+//     console.log(IDs);
+//     const recipe = await getRecipe(IDs[2]);
+//     console.log(recipe);
+//     const related = await getRelated('Jonas');
+//     console.log(related);
+
+//     return recipe;
+// };
+// getRecipesAW().then(result => {
+//     console.log(`${result} is the best ever.`)
+// }); // you have to consume the async function with then() and pass in a callback function where the callback is what is returned, in this case "recipe";
+
+
+ /////////////////////////
+// Lecture: AJAX and APIs
+
+// AJAX: Asynchronous Javascript and XML
+// API: Application Programming Interface
+
+function getWeather(woeid) {
+    const cors = 'https://cors-anywhere.herokuapp.com/';
+
+    fetch(`${cors}https://www.metaweather.com/api/location/${woeid}/`) // returns a promise
+    .then(res => {
+        console.log(res); // res is stored in the body and needs to be converted from JSON to JS
+        return res.json(); // converts the result of the fetch promise body into a JS object
+    })
+    .then(data => { // consuming the promise that is returned from the above then
+        // console.log(data);
+        const today = data.consolidated_weather[0];
+        console.log(`Temperatures in ${data.title} stay between ${today.min_temp} and ${today.max_temp}.`)
+    })
+    .catch(error => {
+        console.log(error);
     });
 };
 
-const getRelated = publisher => {
-    return new Promise((resolve, reject) => {
-        setTimeout((pub) => {
-            const recipe = {
-                title: 'Italian pizza',
-                publisher: 'Jonas'
-            };
-            resolve(`${pub}: ${recipe.title}`);
-        }, 1500, publisher);
-    });
-};
-
-async function getRecipesAW() { // runs in the background and returns a promise
-    const IDs = await getIDs; // await causes the code to stop and wait for the promise in getIDs to be resolved. Once it's resolved, the value of the resolved function is stored in the variable IDs. Also remember that you need more code to handle an error.
-    console.log(IDs);
-    const recipe = await getRecipe(IDs[2]);
-    console.log(recipe);
-    const related = await getRelated('Jonas');
-    console.log(related);
-
-    return recipe;
-};
-getRecipesAW().then(result => {
-    console.log(`${result} is the best ever.`)
-}); // you have to consume the async function with then() and pass in a callback function where the callback is what is returned, in this case "recipe";
+getWeather(44418);
+getWeather(2487956);
